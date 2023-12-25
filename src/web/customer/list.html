@@ -47,6 +47,18 @@
           });
         })
         .catch((error) => console.error(error));
+
+        document.addEventListener("DOMContentLoaded", () => {
+          const list = document.getElementById("customer-list");
+          list.addEventListener("click", (event) => {
+            if (event.target.matches("td")) {
+              // クリックされた要素がtd（顧客名セル）であるかを確認
+              const companyName = event.target.textContent; // クリックされた顧客名を取得
+              const customerId = event.target.parentElement.cells[0].textContent; // customer_idを含むセルの値を取得
+              window.location.href = `detail.html?customerId=${encodeURIComponent(customerId)}`; // パラメータを含んだURLに遷移
+            }
+          });
+        });
     </script>
 
     <!-- BootstrapのJavaScriptと依存関係のリンク -->

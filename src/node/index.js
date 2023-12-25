@@ -30,7 +30,19 @@ app.get("/customers", async (req, res) => {
   }
 });
 
-app.use(express.urlencoded({ extended: true }));
+app.get("/customer/:customerId", async (req, res) => {
+  try {
+    const customerId = req.params.customerId; // URL パラメータから customerId を取得
+    const customerData = await pool.query(
+      "SELECT customer_id, company_name, industry, contact, location, created_date, updated_date FROM customers WHERE customer_id = $1",
+     [customerId]); // クエリの WHERE 句に customerId を使用
+    res.send(customerData.rows);
+  } catch (err) {
+    console.error(err);
+    res.send("Error " + err);
+  }
+});
+
 app.use(express.json());
 
 app.post("/add-customer", async (req, res) => {
