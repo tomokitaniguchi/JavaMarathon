@@ -2,7 +2,7 @@ name: ssh command
 on:
   push:
     branches:
-      - main
+      - origin
 jobs:
   test:
     runs-on: ubuntu-latest
