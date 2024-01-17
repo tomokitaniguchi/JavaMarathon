@@ -10,7 +10,7 @@
 <body>
     <div class="container mt-5">
         <h2 class="mb-4">顧客情報を入力してください</h2>
-        <form action="/customer/add-confirm.html" method="GET" id="customer-form">
+        <form id="customer-form">
             <div class="form-group">
                 <label for="companyName">会社名:</label>
                 <input type="text" class="form-control" id="companyName" name="companyName" required>
@@ -27,10 +27,33 @@
                 <label for="location">所在地:</label>
                 <input type="text" class="form-control" id="location" name="location" required>
             </div>
-            <button type="submit" class="btn btn-primary">確認</button>
+            <button type="submit" class="btn btn-primary">送信</button>
         </form>
     </div>
     <script type="module">
+        import config from '../config.js';
+
+        document.getElementById('customer-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            fetch(config.apiUrl + '/add-customer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams([...formData])
+            }).then(response => response.json())
+              .then(data => {
+                if(data.success) {
+                    alert('顧客情報が正常に保存されました。');
+                    // フォームをリセット
+                    document.getElementById('customer-form').reset();
+                } else {
+                    alert('保存に失敗しました。');
+                }
+              })
+              .catch(error => console.error('Error:', error));
+        });
     </script>
     <!-- BootstrapのJavaScriptの読み込み -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
