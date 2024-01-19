@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>案件情報確認</title>
+    <!-- Bootstrap CSSの読み込み -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <a href="./index.html">←ホーム</a>
+        <div class="container mt-5">
+            <h2 class="mb-4">顧客情報を確認してください</h2>
+            <form action="/add-customer" method="POST" id="customer-form">
+                <div class="form-group">
+                    <label for="companyName">会社名:</label>
+                    <span id="companyName" name="companyName"></span>
+                </div>
+                <div class="form-group">
+                    <label for="industry">業種:</label>
+                    <span id="industry" name="industry"></span>
+                </div>
+                <div class="form-group">
+                    <label for="contact">連絡先:</label>
+                    <span id="contact" name="contact"></span>
+                </div>
+                <div class="form-group">
+                    <label for="location">所在地:</label>
+                    <span id="location" name="location"></span>
+                </div>
+                <button type="submit" class="btn btn-primary">送信</button>
+            </form>
+        </div>
+    </div>
+    <script type="module">
+        // URLからクエリパラメータを取得する関数
+        function getQueryParam(param) {
+          const queryString = window.location.search;
+          const urlParams = new URLSearchParams(queryString);
+          return urlParams.get(param);
+        }
+    
+        // クエリパラメータから値を取得し、HTMLに挿入する
+        document.getElementById('companyName').innerText = getQueryParam('companyName');
+        document.getElementById('industry').innerText = getQueryParam('industry');
+        document.getElementById('contact').innerText = getQueryParam('contact');
+        document.getElementById('location').innerText = getQueryParam('location');
+
+        import config from '../config.js';
+
+        document.getElementById('customer-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // クエリパラメータから値を取得する処理を追加
+            const companyName = getQueryParam('companyName');
+            const industry = getQueryParam('industry');
+            const contact = getQueryParam('contact');
+            const location = getQueryParam('location');
+          
+            var formData = {
+              companyName,
+              industry,
+              contact,
+              location
+            };
+
+            fetch(config.apiUrl + '/add-customer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json' // Content-Typeをapplication/jsonに変更
+                },
+                body: JSON.stringify(formData) // オブジェクトをJSON形式の文字列に変換
+            }).then(response => {
+            console.log(response); // 追加したコード：レスポンスをコンソールに出力
+            return response.json();})
+              .then(data => {
+                if(data.success) {
+                    alert('顧客情報が正常に保存されました。');
+                    // フォームをリセット
+                    document.getElementById('customer-form').reset();
+                } else {
+                    alert('保存に失敗しました。');
+                }
+              })
+              .catch(error => console.error('Error:', error));
+        });
+    </script>
+    <!-- BootstrapのJavaScriptの読み込み -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
