@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 const port = 3449;
 
@@ -30,9 +31,6 @@ app.get("/customers", async (req, res) => {
     res.send("Error " + err);
   }
 });
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
 
 // 新規顧客情報を登録する処理
 app.post("/add-customer", async (req, res) => {
@@ -88,6 +86,21 @@ app.post("/edit/:customerId", async (req, res) => {
       "UPDATE customers SET company_name = $1, industry = $2, contact = $3, location = $4, updated_date = CURRENT_TIMESTAMP WHERE customer_id = $5",
       [companyName, industry, contact, location, customerId]);
     res.json({ success: true, customer: deleteCustomer.rows[0] });
+  } catch (err) {
+    console.error(err);
+    res.json({ success: false });
+  }
+});
+
+// 新規案件情報を登録する処理
+app.post("/add-case", async (req, res) => {
+  try {
+    const { caseName, caseStatus, expectedRevenue, representative } = req.body;
+    const newCase = await pool.query(
+      "INSERT INTO cases (case_name,case_status,expected_revenue,representative) VALUES ($1,$2,$3,$4) RETURNING *",
+      [caseName, caseStatus, expectedRevenue, representative]
+    );
+    res.json({ success: true, customer: newCase.rows[0] });
   } catch (err) {
     console.error(err);
     res.json({ success: false });

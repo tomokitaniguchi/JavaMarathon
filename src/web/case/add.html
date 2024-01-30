@@ -9,7 +9,33 @@
 </head>
 <body>
     <div class="container mt-5">
-        <!-- ここにHTMLを書く -->
+        <a href="../customer/detail.html">←戻る</a>
+        <h2 class="mb-4">案件情報を入力してください</h2>
+        <form action="./add-confirm.html" method="GET" id="case-form">
+            <div class="form-group">
+                <label for="caseName">案件名:</label>
+                <input type="text" class="form-control" id="caseName" name="caseName" required>
+            </div>
+            <div class="form-group">
+                <label for="caseStatus">案件の状態:</label>
+                <select name="caseStatus" id="caseStatus" required>
+                    <option value="">---</option>
+                    <option value="新規">新規</option>
+                    <option value="交渉中">交渉中</option>
+                    <option value="契約締結">契約締結</option>
+                    <option value="失注">失注</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="expectedRevenue">予想収益:</label>
+                <input type="text" class="form-control" id="expectedRevenue" name="expectedRevenue" required>
+            </div>
+            <div class="form-group">
+                <label for="representative">代表社名:</label>
+                <input type="text" class="form-control" id="representative" name="representative" required>
+            </div>
+            <button type="submit" class="btn btn-primary">確認</button>
+        </form>
     </div>
     <script type="module">
         <!-- ここにJSを書く -->
