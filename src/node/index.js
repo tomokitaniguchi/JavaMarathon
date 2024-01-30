@@ -1,7 +1,6 @@
 const express = require("express");
 const app = express();
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
 
 const port = 3449;
 
@@ -31,6 +30,9 @@ app.get("/customers", async (req, res) => {
     res.send("Error " + err);
   }
 });
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // 新規顧客情報を登録する処理
 app.post("/add-customer", async (req, res) => {
