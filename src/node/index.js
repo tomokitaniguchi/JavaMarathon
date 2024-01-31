@@ -108,3 +108,14 @@ app.post("/add-case", async (req, res) => {
     res.json({ success: false });
   }
 });
+
+// 案件一覧表示画面の処理
+app.get("/cases", async (req, res) => {
+  try {
+    const caseData = await pool.query("SELECT * FROM cases");
+    res.send(caseData.rows);
+  } catch (err) {
+    console.error(err);
+    res.send("Error " + err);
+  }
+});
