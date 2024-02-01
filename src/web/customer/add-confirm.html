@@ -78,6 +78,8 @@
                     alert('顧客情報が正常に保存されました。');
                     // フォームをリセット
                     document.getElementById('customer-form').reset();
+                    // 一覧画面にリダイレクト
+                    window.location.href = "./list.html";
                 } else {
                     alert('保存に失敗しました。');
                 }

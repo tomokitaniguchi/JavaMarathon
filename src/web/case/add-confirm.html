@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +8,11 @@
     <!-- Bootstrap CSSの読み込み -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
+
 <body>
     <div class="container mt-5">
         <div class="container mt-5">
-            <a href="./add.html">←戻る</a>
+            <a href="" id="back">←戻る</a>
             <div class="container mt-5">
                 <h2 class="mb-4">案件情報を確認してください</h2>
                 <form action="/add-case" method="POST" id="case-form">
@@ -58,15 +60,17 @@
             const caseStatus = getQueryParam('caseStatus');
             const expectedRevenue = getQueryParam('expectedRevenue');
             const representative = getQueryParam('representative');
+            const customerId = getQueryParam('customerId');
 
             var formData = {
                 caseName,
                 caseStatus,
                 expectedRevenue,
-                representative
+                representative,
+                customerId
             };
 
-            fetch(config.apiUrl + '/add-case', {
+            fetch(`${config.apiUrl}/add-case`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json' // Content-Typeをapplication/jsonに変更
@@ -81,11 +85,27 @@
                         alert('案件情報が正常に保存されました。');
                         // フォームをリセット
                         document.getElementById('case-form').reset();
+                        // 一覧画面にリダイレクト
+                        var newURL = "../case/list.html";
+                        newURL += "?customerId=" + customerId;
+                        window.location.href = newURL;
                     } else {
                         alert('保存に失敗しました。');
                     }
                 })
                 .catch(error => console.error('Error:', error));
+        });
+
+        // 戻るボタンの処理
+        document.getElementById('back').addEventListener('click', function (event) {
+            event.preventDefault(); // リンクのデフォルトの挙動を無効化
+
+            // 現在のURLからcustomerIdの値を取得
+            const urlParams = new URLSearchParams(window.location.search);
+            const customerId = urlParams.get('customerId');
+
+            // リダイレクト
+            window.location.href = "../case/add.html?customerId=" + encodeURIComponent(customerId);
         });
     </script>
     <!-- BootstrapのJavaScriptの読み込み -->
@@ -93,4 +113,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
+
 </html>

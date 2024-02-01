@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +8,10 @@
     <!-- Bootstrap CSSの読み込み -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
+
 <body>
     <div class="container mt-5">
-        <a href="../customer/detail.html">←戻る</a>
+        <a href="../customer/detail.html" id="back">←戻る</a>
         <h2 class="mb-4">案件情報を入力してください</h2>
         <form action="./add-confirm.html" method="GET" id="case-form">
             <div class="form-group">
@@ -34,14 +36,46 @@
                 <label for="representative">代表社名:</label>
                 <input type="text" class="form-control" id="representative" name="representative" required>
             </div>
+            <div>
+                <input type="hidden" id="customerId" name="customerId">
+            </div>
             <button type="submit" class="btn btn-primary">確認</button>
         </form>
     </div>
     <script type="module">
+        // 確認画面への処理
+        document.getElementById('case-form').addEventListener('submit', function (event) {
+
+            // 現在のURLからcustomerIdの値を取得
+            var currentURL = window.location.href;
+            var customerIdMatch = currentURL.match(/customerId=(\d+)/);
+            var customerId = customerIdMatch ? customerIdMatch[1] : null;
+
+            // input要素を取得
+            var customerIdInput = document.getElementById('customerId');
+
+            // customerIdの値をinput要素に設定
+            if (customerId) {
+                customerIdInput.value = customerId;
+            }
+        });
+
+        // 戻るボタンの処理
+        document.getElementById('back').addEventListener('click', function (event) {
+            event.preventDefault(); // リンクのデフォルトの挙動を無効化
+
+            // 現在のURLからcustomerIdの値を取得
+            const urlParams = new URLSearchParams(window.location.search);
+            const customerId = urlParams.get('customerId');
+
+            // リダイレクト
+            window.location.href = "../customer/detail.html?customerId=" + encodeURIComponent(customerId);
+        });
     </script>
     <!-- BootstrapのJavaScriptの読み込み -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
+
 </html>

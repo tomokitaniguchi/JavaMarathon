@@ -1,58 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>詳細表示画面</title>
-    <!-- Bootstrap CSSの読み込み -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  </head>
-  <body>
-    <div class="container mt-5">
-      <a href="./list.html">←戻る</a>
-      <h1 class="mb-4">Customer</h1>
-      <table class="table table-striped">
-        <thead class="thead-dark">
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Company Name</th>
-            <th scope="col">Contact</th>
-            <th scope="col">industry</th>
-            <th scope="col">location</th>
-            <th scope="col">created_date</th>
-            <th scope="col">updated_date</th>
-          </tr>
-        </thead>
-        <tbody id="customer-list">
-          <!-- 顧客データはここに挿入されます -->
-        </tbody>
-      </table>
-      <form action="/edit" method="post" id="edit-form">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>詳細表示画面</title>
+  <!-- Bootstrap CSSの読み込み -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+
+<body>
+  <div class="container mt-5">
+    <a href="./list.html">←戻る</a>
+    <h1 class="mb-4">Customer</h1>
+    <table class="table table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Company Name</th>
+          <th scope="col">Contact</th>
+          <th scope="col">industry</th>
+          <th scope="col">location</th>
+          <th scope="col">created_date</th>
+          <th scope="col">updated_date</th>
+        </tr>
+      </thead>
+      <tbody id="customer-list">
+        <!-- 顧客データはここに挿入されます -->
+      </tbody>
+    </table>
+    <form action="/edit" method="post" id="edit-form">
+      <div>
         <label for="companyInput">Company Name
           <input type="text" id="companyInput" name="companyName">
         </label>
+      </div>
+      <div>
         <label for="contactInput">Contact
           <input type="text" id="contactInput" name="contact">
         </label>
+      </div>
+      <div>
         <label for="industryInput">industry
           <input type="text" id="industryInput" name="industry">
         </label>
+      </div>
+      <div>
         <label for="locationInput">location
           <input type="text" id="locationInput" name="location">
         </label>
-        <input type="submit" value="編集">
-      </form>
-      <form action="/delete" method="post" id="delete-form">
-        <input type="submit" value="削除">
-      </form>
-      <div>
-        <a href="../case/add.html">案件登録→</a>
       </div>
-      <div>
-        <a href="../case/list.html">案件一覧→</a>
-      </div>
+      <input type="submit" value="編集">
+    </form>
+    <form action="/delete" method="post" id="delete-form">
+      <input type="submit" value="削除">
+    </form>
+    <div>
+      <a href="../case/add.html" id="caseAdd">案件登録→</a>
     </div>
-    <script type="module">
+    <div>
+      <a href="../case/list.html" id="caseList">案件一覧→</a>
+    </div>
+  </div>
+  <script type="module">
     // ExpressサーバのAPIエンドポイントのURL
     import config from "../config.js";
 
@@ -68,10 +78,10 @@
         if (!results[2]) return "";
         return decodeURIComponent(results[2].replace(/\+/g, " "));
       }
-  
+
       const customerId = getParameterByName("customerId");
       if (customerId) {
-      fetch(`${config.apiUrl}/customer/${customerId}`)
+        fetch(`${config.apiUrl}/customer/${customerId}`)
           .then((response) => {
             console.log(response); // ここでレスポンスオブジェクトをログに出力
             return response.json();
@@ -99,30 +109,30 @@
               const companyInput = document.getElementById('companyInput'); // input要素を取得
               companyInput.value = cell2.textContent; // テキストをinputのvalueに設定  
               companyInput.placeholder = cell2.textContent; // テキストをinputのplaceholderに設定  
-              const contactInput = document.getElementById('contactInput'); 
-              contactInput.value = cell3.textContent; 
-              contactInput.placeholder = cell3.textContent; 
-              const industryInput = document.getElementById('industryInput'); 
-              industryInput.value = cell4.textContent; 
-              industryInput.placeholder = cell4.textContent; 
-              const locationInput = document.getElementById('locationInput'); 
-              locationInput.value = cell5.textContent; 
-              locationInput.placeholder = cell5.textContent; 
+              const contactInput = document.getElementById('contactInput');
+              contactInput.value = cell3.textContent;
+              contactInput.placeholder = cell3.textContent;
+              const industryInput = document.getElementById('industryInput');
+              industryInput.value = cell4.textContent;
+              industryInput.placeholder = cell4.textContent;
+              const locationInput = document.getElementById('locationInput');
+              locationInput.value = cell5.textContent;
+              locationInput.placeholder = cell5.textContent;
             });
           })
           .catch((error) => console.error(error));
-        }
+      }
     });
 
     // 顧客情報を削除する処理
-    document.getElementById('delete-form').addEventListener('submit', function(e) {
+    document.getElementById('delete-form').addEventListener('submit', function (e) {
       e.preventDefault();
       const urlParams = new URLSearchParams(window.location.search);
       const customerId = urlParams.get('customerId');
       const confirmation = confirm("削除してもよろしいですか？");
       if (confirmation) {
         fetch(`${config.apiUrl}/delete/${customerId}`, {
-          method: 'DELETE' 
+          method: 'DELETE'
         })
           .then((response) => {
             console.log(response); // レスポンスオブジェクトをログに出力
@@ -130,27 +140,28 @@
           })
           .then((data) => {
             console.log(data); // 解析されたデータをログに出力
-            // 必要な処理を追加
+            // 一覧画面にリダイレクト
+            window.location.href = "./list.html";
           })
           .catch((error) => console.error(error));
       }
     });
 
     // 顧客情報を編集する処理
-    document.getElementById('edit-form').addEventListener('submit', function(e) {
+    document.getElementById('edit-form').addEventListener('submit', function (e) {
       e.preventDefault();
       const urlParams = new URLSearchParams(window.location.search);
       const customerId = urlParams.get('customerId');
       if (customerId) {
         const form = document.getElementById('edit-form'); // フォームの要素を取得
         const formData = new FormData(form); // フォームのデータを取得
-    
+
         // フォームデータをオブジェクトに変換
         const convertedFormData = {};
         formData.forEach((value, key) => {
           convertedFormData[key] = value;
         });
-    
+
         fetch(`${config.apiUrl}/edit/${customerId}`, {
           method: 'POST',
           headers: {
@@ -158,21 +169,60 @@
           },
           body: JSON.stringify(convertedFormData) // オブジェクトをJSON形式の文字列に変換
         })
-        .then((response) => {
-          console.log(response); // レスポンスオブジェクトをログに出力
-          return response.json();
-        })
-        .then((data) => {
-          console.log(data); // 解析されたデータをログに出力
-          alert("編集が完了しました。");
-        })
-        .catch((error) => console.error(error));
+          .then((response) => {
+            console.log(response); // レスポンスオブジェクトをログに出力
+            return response.json();
+          })
+          .then((data) => {
+            console.log(data); // 解析されたデータをログに出力
+            alert("編集が完了しました。");
+            // ページを再読み込み
+            window.location.reload();
+          })
+          .catch((error) => console.error(error));
       }
     });
-    </script>
-    <!-- BootstrapのJavaScriptと依存関係のリンク -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  </body>
+
+    // 案件登録の処理
+    document.getElementById('caseAdd').addEventListener('click', function (event) {
+      event.preventDefault(); // リンクのデフォルトの挙動を無効化
+
+      // 現在のURLからcustomerIdの値を取得
+      const urlParams = new URLSearchParams(window.location.search);
+      const customerId = urlParams.get('customerId');
+
+      // 新しいURLを構築
+      var newURL = "../case/add.html";
+      if (customerId) {
+        newURL += "?customerId=" + customerId;
+      }
+
+      // 新しいURLにリダイレクト
+      window.location.href = newURL;
+    });
+
+    // 案件一覧の処理
+    document.getElementById('caseList').addEventListener('click', function (event) {
+      event.preventDefault(); // リンクのデフォルトの挙動を無効化
+
+      // 現在のURLからcustomerIdの値を取得
+      const urlParams = new URLSearchParams(window.location.search);
+      const customerId = urlParams.get('customerId');
+
+      // 新しいURLを構築
+      var newURL = "../case/list.html";
+      if (customerId) {
+        newURL += "?customerId=" + customerId;
+      }
+
+      // 新しいURLにリダイレクト
+      window.location.href = newURL;
+    });
+  </script>
+  <!-- BootstrapのJavaScriptと依存関係のリンク -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
 </html>
