@@ -1,22 +1,81 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>案件情報入力</title>
+    <title>商談情報入力</title>
     <!-- Bootstrap CSSの読み込み -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
+
 <body>
     <div class="container mt-5">
-        <!-- ここにHTMLを書く -->
+        <a href="../customer/detail.html" id="back">←戻る</a>
+        <h2 class="mb-4">商談情報を入力してください</h2>
+        <form action="./add-confirm.html" method="GET" id="negotiation-form">
+            <div class="form-group">
+                <label for="negotiationDate">商談日:</label>
+                <input type="date" name="negotiationDate" id="negotiationDate" required>
+            </div>
+            <div class="form-group">
+                <label for="negotiationContent">商談内容:</label><br>
+                <textarea name="negotiationContent" id="negotiationContent" cols="128" rows="7" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="negotiationConfidence">商談の確信度:</label>
+                <input type="number" class="form-control" id="negotiationConfidence" name="negotiationConfidence"
+                    required min="0" max="1">
+            </div>
+            <div class="form-group">
+                <label for="negotiationRepresentative">代表者名:</label>
+                <input type="text" class="form-control" id="negotiationRepresentative" name="negotiationRepresentative"
+                    required>
+            </div>
+            <div>
+                <input type="hidden" id="customerId" name="customerId">
+            </div>
+            <div>
+                <input type="hidden" id="caseId" name="caseId">
+            </div>
+            <button type="submit" class="btn btn-primary">確認</button>
+        </form>
     </div>
     <script type="module">
-        <!-- ここにJSを書く -->
+        // 確認画面への処理
+        document.getElementById('negotiation-form').addEventListener('submit', function (event) {
+
+            // 現在のURLから値を取得
+            const urlParams = new URLSearchParams(window.location.search);
+            const customerId = urlParams.get('customerId');
+            const caseId = urlParams.get('caseId');
+
+            // input要素を取得
+            var customerIdInput = document.getElementById('customerId');
+            var caseIdInput = document.getElementById('caseId');
+
+            // customerIdの値をinput要素に設定
+            customerIdInput.value = customerId;
+            caseIdInput.value = caseId;
+        });
+
+        // 戻るボタンの処理
+        document.getElementById('back').addEventListener('click', function (event) {
+            event.preventDefault(); // リンクのデフォルトの挙動を無効化
+
+            // 現在のURLからcustomerIdの値を取得
+            const urlParams = new URLSearchParams(window.location.search);
+            const customerId = urlParams.get('customerId');
+            const caseId = urlParams.get('caseId');
+
+            // リダイレクト
+            window.location.href = "../case/detail.html?customerId=" + customerId + "&caseId=" + caseId;
+        });
     </script>
     <!-- BootstrapのJavaScriptの読み込み -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
+
 </html>

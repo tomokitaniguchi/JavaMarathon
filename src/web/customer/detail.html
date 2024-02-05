@@ -191,14 +191,7 @@
       const urlParams = new URLSearchParams(window.location.search);
       const customerId = urlParams.get('customerId');
 
-      // 新しいURLを構築
-      var newURL = "../case/add.html";
-      if (customerId) {
-        newURL += "?customerId=" + customerId;
-      }
-
-      // 新しいURLにリダイレクト
-      window.location.href = newURL;
+      window.location.href = "../case/add.html?customerId=" + customerId;
     });
 
     // 案件一覧の処理
@@ -209,14 +202,7 @@
       const urlParams = new URLSearchParams(window.location.search);
       const customerId = urlParams.get('customerId');
 
-      // 新しいURLを構築
-      var newURL = "../case/list.html";
-      if (customerId) {
-        newURL += "?customerId=" + customerId;
-      }
-
-      // 新しいURLにリダイレクト
-      window.location.href = newURL;
+      window.location.href = "../case/list.html?customerId=" + customerId;
     });
   </script>
   <!-- BootstrapのJavaScriptと依存関係のリンク -->

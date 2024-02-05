@@ -125,13 +125,13 @@ app.get("/cases/:customerId", async (req, res) => {
 });
 
 // 案件詳細表示画面の処理
-app.get("/case/:customerId", async (req, res) => {
+app.get("/case/:caseId", async (req, res) => {
   try {
-    const caseId = req.params.customerId; // URL パラメータから customerId を取得
-    const customerData = await pool.query(
+    const caseId = req.params.caseId; // URL パラメータから caseId を取得
+    const caseData = await pool.query(
       "SELECT case_id, case_name, case_status, expected_revenue, representative, customer_id, created_date, updated_date FROM cases WHERE case_id = $1",
-     [caseId]); // クエリの WHERE 句に customerId を使用
-    res.send(customerData.rows);
+     [caseId]); // クエリの WHERE 句に caseId を使用
+    res.send(caseData.rows);
   } catch (err) {
     console.error(err);
     res.send("Error " + err);
@@ -161,6 +161,79 @@ app.post("/editCase/:caseId", async (req, res) => {
       "UPDATE cases SET case_name = $1, case_status = $2, expected_revenue = $3, representative = $4, updated_date = CURRENT_TIMESTAMP WHERE case_id = $5",
       [caseName, caseStatus, expectedRevenue, representative, caseId]);
     res.json({ success: true, customer: updateCase.rows[0] });
+  } catch (err) {
+    console.error(err);
+    res.json({ success: false });
+  }
+});
+
+// 新規商談情報を登録する処理
+app.post("/add-negotiation", async (req, res) => {
+  try {
+    const { negotiationDate, negotiationContent, negotiationConfidence, negotiationRepresentative, caseId} = req.body;
+    const newCase = await pool.query(
+      "INSERT INTO negotiations (negotiation_date,negotiation_content,negotiation_confidence,negotiation_representative,case_id) VALUES ($1,$2,$3,$4,$5) RETURNING *",
+      [negotiationDate, negotiationContent, negotiationConfidence, negotiationRepresentative, caseId]
+    );
+    res.json({ success: true, customer: newCase.rows[0] });
+  } catch (err) {
+    console.error(err);
+    res.json({ success: false });
+  }
+});
+
+// 商談一覧表示画面の処理
+app.get("/negotiations/:caseId", async (req, res) => {
+  try {
+    const caseId = req.params.caseId; 
+    const caseData = await pool.query(
+      "SELECT negotiation_id, negotiation_date, negotiation_content, negotiation_confidence, negotiation_representative FROM negotiations WHERE case_id = $1 ORDER BY negotiation_id",
+    [caseId]
+    ); // クエリの WHERE 句に customerId を使用
+    res.send(caseData.rows);
+  } catch (err) {
+    console.error(err);
+    res.send("Error " + err);
+  }
+});
+
+// 商談詳細表示画面の処理
+app.get("/negotiation/:negotiationId", async (req, res) => {
+  try {
+    const negotiationId = req.params.negotiationId; 
+    const negotiationData = await pool.query(
+      "SELECT negotiation_id, negotiation_date, negotiation_content, negotiation_confidence, negotiation_representative, case_id, created_date, updated_date FROM negotiations WHERE negotiation_id = $1",
+     [negotiationId]); // クエリの WHERE 句に negotiationId を使用
+    res.send(negotiationData.rows);
+  } catch (err) {
+    console.error(err);
+    res.send("Error " + err);
+  }
+});
+
+// 商談情報を削除する処理
+app.delete("/deleteNegotiation/:negotiationId", async (req, res) => {
+  try {
+    const negotiationId = req.params.negotiationId; 
+    const deleteNegotiation = await pool.query(
+      "DELETE FROM negotiations WHERE negotiation_id = $1",
+      [negotiationId]);
+    res.json({ success: true, customer: deleteNegotiation.rows[0] });
+  } catch (err) {
+    console.error(err);
+    res.json({ success: false });
+  }
+});
+
+// 商談情報を変更する処理
+app.post("/editNegotiation/:negotiationId", async (req, res) => {
+  try {
+    const { negotiationId } = req.params; 
+    const { negotiationDate, negotiationContent, negotiationConfidence, negotiationRepresentative } = req.body;
+    const updateNegotiation = await pool.query(
+      "UPDATE negotiations SET negotiation_date = $1, negotiation_content = $2, negotiation_confidence = $3, negotiation_representative = $4, updated_date = CURRENT_TIMESTAMP WHERE negotiation_id = $5",
+      [negotiationDate, negotiationContent, negotiationConfidence, negotiationRepresentative, negotiationId]);
+    res.json({ success: true, customer: updateNegotiation.rows[0] });
   } catch (err) {
     console.error(err);
     res.json({ success: false });

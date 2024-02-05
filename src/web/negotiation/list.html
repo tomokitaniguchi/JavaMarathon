@@ -1,22 +1,96 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>案件情報入力</title>
-    <!-- Bootstrap CSSの読み込み -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>商談情報入力</title>
+  <!-- Bootstrap CSSの読み込み -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
+
 <body>
-    <div class="container mt-5">
-        <!-- ここにHTMLを書く -->
-    </div>
-    <script type="module">
-        <!-- ここにJSを書く -->
-    </script>
-    <!-- BootstrapのJavaScriptの読み込み -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <div class="container mt-5">
+    <a href="../case/detail.html" id="back">←戻る</a>
+    <h1 class="mb-4">Negotiation List</h1>
+    <table class="table table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Negotiation Date</th>
+          <th scope="col">Negotiation Content</th>
+          <th scope="col">Negotiation Confidence</th>
+          <th scope="col">Negotiation Representative</th>
+        </tr>
+      </thead>
+      <tbody id="negotiation-list">
+        <!-- 顧客データはここに挿入されます -->
+      </tbody>
+    </table>
+  </div>
+  <script type="module">
+    // ExpressサーバのAPIエンドポイントのURL
+    import config from "../config.js";
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const caseId = urlParams.get('caseId');
+    fetch(`${config.apiUrl}/negotiations/${caseId}`)
+      .then((response) => {
+        console.log(response); // ここでレスポンスオブジェクトをログに出力
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data); // ここで解析されたデータをログに出力
+        const list = document.getElementById("negotiation-list");
+        data.forEach((negotiation, index) => {
+          const row = list.insertRow();
+          const cell1 = row.insertCell(0);
+          const cell2 = row.insertCell(1);
+          const cell3 = row.insertCell(2);
+          const cell4 = row.insertCell(3);
+          const cell5 = row.insertCell(4);
+          cell1.textContent = negotiation.negotiation_id;
+          cell2.textContent = negotiation.negotiation_date;
+          cell3.textContent = negotiation.negotiation_content;
+          cell4.textContent = negotiation.negotiation_confidence;
+          cell5.textContent = negotiation.negotiation_representative;
+        });
+      })
+      .catch((error) => console.error(error));
+
+    // 戻るボタンの処理
+    document.getElementById('back').addEventListener('click', function (event) {
+      event.preventDefault(); // リンクのデフォルトの挙動を無効化
+
+      // 現在のURLからcustomerIdの値を取得
+      const urlParams = new URLSearchParams(window.location.search);
+      const customerId = urlParams.get('customerId');
+      const caseId = urlParams.get('caseId');
+
+      // 新しいURLにリダイレクト
+      window.location.href = "../case/detail.html?customerId=" + customerId + "&caseId=" + caseId;
+    });
+
+    // 商談詳細画面への処理
+    document.addEventListener("DOMContentLoaded", () => {
+      const list = document.getElementById("negotiation-list");
+      list.addEventListener("click", (event) => {
+        if (event.target.matches("td")) {
+          // クリックされた要素がtd（商談日セル）であるかを確認
+          const negotiationDate = event.target.textContent; // クリックされた商談日を取得
+          const negotiationId = event.target.parentElement.cells[0].textContent; // negotiation_idを含むセルの値を取得
+          const urlParams = new URLSearchParams(window.location.search);
+          const customerId = urlParams.get('customerId');
+          const caseId = urlParams.get('caseId');
+          window.location.href = `detail.html?customerId=${encodeURIComponent(customerId)}&caseId=${encodeURIComponent(caseId)}&negotiationId=${encodeURIComponent(negotiationId)}`; // パラメータを含んだURLに遷移
+        }
+      });
+    });
+  </script>
+  <!-- BootstrapのJavaScriptの読み込み -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
+
 </html>

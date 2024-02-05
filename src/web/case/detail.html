@@ -62,10 +62,10 @@
       <input type="submit" value="削除">
     </form>
     <div>
-      <a href="../negotiation/add.html" id="negotiationAdd">商品登録→</a>
+      <a href="../negotiation/add.html" id="negotiationAdd">商談登録→</a>
     </div>
     <div>
-      <a href="../negotiation/list.html" id="negotiationList">商品一覧→</a>
+      <a href="../negotiation/list.html" id="negotiationList">商談一覧→</a>
     </div>
   </div>
   <script type="module">
@@ -201,14 +201,31 @@
       const urlParams = new URLSearchParams(window.location.search);
       const customerId = urlParams.get('customerId');
 
-      // 新しいURLを構築
-      var newURL = "../case/list.html";
-      if (customerId) {
-        newURL += "?customerId=" + encodeURIComponent(customerId);
-      }
+      window.location.href = "../case/list.html?customerId=" + customerId;
+    });
 
-      // 新しいURLにリダイレクト
-      window.location.href = newURL;
+    // 商談登録の処理
+    document.getElementById('negotiationAdd').addEventListener('click', function (event) {
+      event.preventDefault(); // リンクのデフォルトの挙動を無効化
+
+      // 現在のURLからcustomerIdの値を取得
+      const urlParams = new URLSearchParams(window.location.search);
+      const customerId = urlParams.get('customerId');
+      const caseId = urlParams.get('caseId');
+
+      window.location.href = "../negotiation/add.html?customerId=" + customerId + "&caseId=" + caseId;
+    });
+
+    // 商談一覧の処理
+    document.getElementById('negotiationList').addEventListener('click', function (event) {
+      event.preventDefault(); // リンクのデフォルトの挙動を無効化
+
+      // 現在のURLからcustomerIdの値を取得
+      const urlParams = new URLSearchParams(window.location.search);
+      const customerId = urlParams.get('customerId');
+      const caseId = urlParams.get('caseId');
+
+      window.location.href = "../negotiation/list.html?customerId=" + customerId + "&caseId=" + caseId;
     });
   </script>
   <!-- BootstrapのJavaScriptと依存関係のリンク -->
